@@ -1,23 +1,10 @@
 import telebot
 from telebot import types
-import sqlite3
+import main
 
 bot = telebot.TeleBot('6535543696:AAERcmRampwQVEswyoWqE5Bc9O1eK7_-kkM')
-
-class Database:
-    def init(self):
-        self.conn = sqlite3.connect("database.db", check_same_thread=False)
-        self.cursor = self.conn.cursor()
-
-    def get_user(self, user_id):
-        self.cursor.execute(f"SELECT username FROM users WHERE id={user_id}")
-        return self.cursor.fetchone()[0]
-
-    def register(self, user_id, name):
-        self.cursor.execute(f"INSERT INTO users VALUES (?, ?)", [user_id, name])
-        self.conn.commit()
     
-db = Database()
+db = main.Database()
     
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -33,11 +20,11 @@ def callback_handler(call):
     if call.data == "play":
         markup = types.InlineKeyboardMarkup()
         btn1 = types.InlineKeyboardButton("🟥Stop", callback_data="stop")
-        btn2 = types.InlineKeyboardButton("Цитаты", callback_data="Filosof", url= "https://t.me/chekhov_life")
-        btn3 = types.InlineKeyboardButton("🤖Неиросеть", callback_data="GPT", url= "https://t.me/chatsgpts_bot")
-        btn4 = types.InlineKeyboardButton("📰Новости", callback_data='Vesty', url= "https://t.me/naebnet")
-        btn5 = types.InlineKeyboardButton("🥇Спорт", callback_data='Sport')
-        btn6 = types.InlineKeyboardButton("💸Бизнес и стартапы", callback_data='buzinez', url= "https://t.me/ikniga")
+        btn2 = types.InlineKeyboardButton("Гонки", callback_data="speed")
+        btn3 = types.InlineKeyboardButton("Открытый мир", callback_data="world")
+        btn4 = types.InlineKeyboardButton("Выживание", callback_data='survival')
+        btn5 = types.InlineKeyboardButton("Шутер", callback_data='shooter')
+        btn6 = types.InlineKeyboardButton("Экшен", callback_data='action')
         btn7 = types.InlineKeyboardButton("🎤ВК Музыка 2024", callback_data='Muzik', url= "https://t.me/pesni_treky")
         btn7 = types.InlineKeyboardButton("Одежда", callback_data='lavse', url= "https://t.me/pinkmoon2000")
         markup.add(btn1, btn2, btn3, btn4, btn5, btn6, btn7)
@@ -46,12 +33,58 @@ def callback_handler(call):
         markup = types.InlineKeyboardMarkup()
         markup.add(types.InlineKeyboardButton("🟩Play", callback_data="play"))
         bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=markup)
-    elif call.data == "Sport":
+
+ 
+
+    elif call.data == "speed":
         markup = types.InlineKeyboardMarkup()
-        bt1 = types.InlineKeyboardButton("🟥Stop", callback_data="stop")
-        bt2 = types.InlineKeyboardButton("💪SJBODY", url= "https://t.me/sjbodyfit")
-        bt3 = types.InlineKeyboardButton("⚽️Матч ТВ", url= "https://t.me/Match_TV")
-        markup.add(bt1, bt2, bt3)
+        b1 = types.InlineKeyboardButton("🟥Stop", callback_data="stop")
+        b2 = types.InlineKeyboardButton("ASSETTO CORSA")
+        b3 = types.InlineKeyboardButton("forza horizon 6")
+        b4 = types.InlineKeyboardButton('CARX DRIFT RACING ONLINE')
+        b5 = types.InlineKeyboardButton('Need for speed 2024 ')
+        markup.add(b1, b2, b3, b4, b5)
         bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=markup)
-        
+
+    elif call.data == "world":
+        markup = types.InlineKeyboardMarkup()
+        b1 = types.InlineKeyboardButton("🟥Stop", callback_data="stop")
+        b2 = types.InlineKeyboardButton("Grand Theft Auto VI")
+        b3 = types.InlineKeyboardButton("Red Dead Redemption")
+        b4 = types.InlineKeyboardButton('FALLOUT 5')
+        b5 = types.InlineKeyboardButton('MAFIA IV')
+        markup.add(b1, b2, b3, b4, b5)
+        bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=markup)
+
+    elif call.data == "survival":
+        markup = types.InlineKeyboardMarkup()
+        b1 = types.InlineKeyboardButton("🟥Stop", callback_data="stop")
+        b2 = types.InlineKeyboardButton("Minecraft")
+        b3 = types.InlineKeyboardButton("Terraria")
+        b4 = types.InlineKeyboardButton('The Forest')
+        markup.add(b1, b2, b3, b4, b5)
+        bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=markup)
+     
+    elif call.data == "shooter":
+        markup = types.InlineKeyboardMarkup()
+        b1 = types.InlineKeyboardButton("🟥Stop", callback_data="stop")
+        b2 = types.InlineKeyboardButton("Battlefield 2")
+        b3 = types.InlineKeyboardButton("Counter-Strike 3")
+        b4 = types.InlineKeyboardButton('far cry 3')
+        b5 = types.InlineKeyboardButton('Atomic Heart')
+        markup.add(b1, b2, b3, b4, b5)
+        bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=markup)
+
+    elif call.data == "action":
+            markup = types.InlineKeyboardMarkup()
+            b1 = types.InlineKeyboardButton("🟥Stop", callback_data="stop")
+            b2 = types.InlineKeyboardButton("Rust")
+            b3 = types.InlineKeyboardButton("DAYZ")
+            b4 = types.InlineKeyboardButton('Metro 2044')
+            b5 = types.InlineKeyboardButton('Max Payne')
+            markup.add(b1, b2, b3, b4, b5)
+            bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=markup)
+
+
+
 bot.polling(none_stop=True)
