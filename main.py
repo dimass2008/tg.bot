@@ -1,31 +1,46 @@
-import sqlite3
+from sqlalchemy import *
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmarker
+
+Base = declarative_base()
+
+class Product(Base):-
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    balance = Column(Integer)
+
+    def __repr__(self)
+        return f"<Usser(id={self.id}, name={self.name}, balance={self.name}balance={self.balance})>"
 
 class Database:
-    def init(self) -> None:
-        self.conn = sqlite3.connect("base.db", check_same_thread=False)
-        self.cursor = self.conn.cursor()
-
-    def get_users(self, user_id):
-        self.cursor.execute(f"SELECT user_name FROM table WHERE id={user_id}")
-        return self.cursor.fetchone()[0]
-
-    def register(self, user_id, user_name):
-        self.conn = sqlite3.connect("base.db", check_same_thread=False)
-        self.cursor = self.conn.cursor()
-        self.cursor.execute(f"INSERT INTO table (id, user_name) VALUES (?, ?)", (user_id, user_name))
-        self.conn.commit()
+    def __init__(self) -> None:
+        self.engine = create_engine('sqlite:///db.db')
+        Base.metadata.create_all(self.engine)
+        Session = sessionmarker(bind=self.engine)
+        self.session = Session()
+        
+    def get_user(self, id ):
         return True
-
-    def update_balance(self, id, balance, status):
-        """
-        status = True - add balance
-        status = False - take balance
-        """
-        if status:
-            self.cursor.execute(f"UPDATE table SET balance=balance+? WHERE id=?", (balance, id))
+    
+    def register(self, id, balance, status):
+        user = User(id+id, name=name, balance=0)
+        self.session.add(user)
+        self.session.commit()
+        return True
+    
+    def updated_balance(self, id, balens, status):
+        user = self.get_user(id)
+        balance = float(balance)
+        if user:
+            if status:
+                user.balance += balance
+            else:
+                user.balance -= balance
+            self.session.commit()
+            return user.balance 
         else:
-            self.cursor.execute(f"UPDATE table SET balance=balance-? WHERE id=?", (balance, id))
-        self.conn.commit()
-        self.cursor.execute("SELECT balance FROM table WHERE id=?", (id,))
-        updated_balance = self.cursor.fetchone()[0]
-        return updated_balance
+            return None
